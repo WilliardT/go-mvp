@@ -18,3 +18,16 @@ env-cleanup:
 	else \
 		echo "Очистка окружения отменена"; \
 	fi
+
+migrate-create:
+	@if [ -z "$(name)" ]; then \
+		echo "Имя миграции не может быть пустым. Пример: make migrate-create name=create_users_table"; \
+		exit 1; \
+	fi \
+
+	docker compose run --rm go-mvp-postgres-migrate \
+		create \
+	  	-ext sql \
+		-dir /migrations \
+		-seq "$(name)"
+
