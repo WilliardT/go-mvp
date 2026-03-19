@@ -1,0 +1,23 @@
+services:
+  go-mvp-postgres:
+    image: postgres:18.1-bookworm
+    container_name: go-env-postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - ${PROJECT_ROOT}/out/pgdata:/var/lib/postgresql
+    restart: always
+
+  go-mvp-postgres-migrate:
+    image: migrate/migrate:v4.19.1
+    volumes:
+      - ${PROJECT_ROOT}/migrations:/migrations
+
+  port-forwarder:
+    image: alpine/socat:1.8.0.3
+    container_name: go-mvp-app-postgres-port-forwarder
+    command: tcp-listen:5432,fork,reuseaddr tcp:go-mvp-postgres:5432
+    ports:
+      - "127.0.0.1:5432:5432"
