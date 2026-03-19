@@ -19,6 +19,12 @@ env-cleanup:
 		echo "Очистка окружения отменена"; \
 	fi
 
+env-port-forward:
+	@docker compose up -d port-forwarder
+
+env-port-close:
+	@docker compose down port-forwarder
+
 migrate-create:
 	@if [ -z "$(name)" ]; then \
 		echo "Имя миграции не может быть пустым. Пример: make migrate-create name=create_users_table"; \
@@ -45,3 +51,4 @@ migrate-action:
 		-path /migrations \
 		-database postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@go-mvp-postgres:5432/$(POSTGRES_DB)?sslmode=disable \
 		$(action)
+

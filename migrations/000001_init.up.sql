@@ -20,5 +20,5 @@ CREATE TABLE go_mvp_app.products (
     created_at    TIMESTAMPTZ,
     updated_at    TIMESTAMPTZ,    
 
-    user_id       INTEGER        NOT NULL   REFERENCES go_mvp_app.users(id),
+    user_id       INTEGER        NOT NULL   REFERENCES go_mvp_app.users(id)
 )
