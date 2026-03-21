@@ -52,3 +52,5 @@ migrate-action:
 		-database postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@go-mvp-postgres:5432/$(POSTGRES_DB)?sslmode=disable \
 		$(action)
 
+app-run:
+	@go run cmd/go-mvp-app/main.go
