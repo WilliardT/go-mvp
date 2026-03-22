@@ -2,8 +2,10 @@ package users_transport_http
 
 import (
 	"encoding/json"
-	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
+	"fmt"
 	"net/http"
+
+	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
 )
 
 type CreateUserRequest struct {
@@ -27,7 +29,8 @@ func (h *UsersHTTPHandler) CreateUser(rw http.ResponseWriter, r *http.Request) {
 	var request CreateUserRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(rw, err.Error(), http.StatusBadRequest)
-		return
+		fmt.Fprintf(rw, "invalid request body: %v", err)
 	}
+
+	rw.WriteHeader(http.StatusOK)
 }
