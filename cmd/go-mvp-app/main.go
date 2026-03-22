@@ -31,7 +31,7 @@ func main() {
 	}
 	defer logger.Close()
 
-	logger.Debug("Starting application")
+	logger.Debug("Starting application =>")
 
 	usersTransportHTTP := users_transport_http.NewUsersHTTPHandler(nil)
 
