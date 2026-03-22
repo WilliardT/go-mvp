@@ -1,12 +1,12 @@
 package users_transport_http
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 
+	"github.com/WilliardT/go-mvp/internal/core/domain"
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
 	core_http_request "github.com/WilliardT/go-mvp/internal/core/transport/http/request"
+	core_http_response "github.com/WilliardT/go-mvp/internal/core/transport/http/response"
 )
 
 type CreateUserRequest struct {
@@ -24,18 +24,42 @@ type CreateUserResponse struct {
 func (h *UsersHTTPHandler) CreateUser(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)
+	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 
 	log.Debug("CreateUser called")
 
 	var request CreateUserRequest
 
 	if err := core_http_request.DecodeAndValidateRequest(r, &request); err != nil {
+		responseHandler.ErrorResponse(err, "failed to decode and validate HTTP request")
 		
+		return
 	}
 
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		fmt.Fprintf(rw, "invalid request body: %v", err)
+	userDomain := domainFromDTO(request)
+
+	userDomain, err :=h.usersService.CreateUser(ctx, userDomain)
+
+	if err != nil {
+		responseHandler.ErrorResponse(err, "failed to create user")
+
+		return
 	}
 
-	rw.WriteHeader(http.StatusOK)
+	response := dtoFromDomain(userDomain)
+
+	responseHandler.JSONResponse(response, http.StatusCreated)
+}
+
+func domainFromDTO(dto CreateUserRequest) domain.User {
+	return domain.NewUserUninitialized(dto.FullName, dto.PhoneNumber)
+}
+
+func dtoFromDomain(user domain.User) CreateUserResponse {
+	return CreateUserResponse{
+		ID:          user.ID,
+		Version:     user.Version,
+		FullName:    user.FulltName,
+		PhoneNumber: user.PhoneNumber,
+	}
 }
