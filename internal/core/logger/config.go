@@ -1,5 +1,11 @@
 package core_logger
 
+import (
+	"fmt"
+
+	"github.com/kelseyhightower/envconfig"
+)
+
 
 type LoggerConfig struct {
 	Level   string  `envconfig:"LEVEL" required:"true"`
