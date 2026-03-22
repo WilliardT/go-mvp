@@ -2,8 +2,8 @@ package users_transport_http
 
 import (
 	"encoding/json"
-	"net/http"
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
+	"net/http"
 )
 
 type CreateUserRequest struct {
@@ -21,9 +21,9 @@ type CreateUserResponse struct {
 func (h *UsersHTTPHandler) CreateUser(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)
-	
+
 	log.Debug("CreateUser called")
-	
+
 	var request CreateUserRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {

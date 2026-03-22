@@ -14,7 +14,6 @@ import (
 	"go.uber.org/zap"
 )
 
-
 func main() {
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),

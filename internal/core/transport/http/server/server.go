@@ -26,9 +26,9 @@ func NewHTTPServer(
 	middleware ...core_http_middleware.Middleware,
 ) *HTTPServer {
 	return &HTTPServer{
-		mux:    	http.NewServeMux(),
-		config: 	config,
-		log:    	log,
+		mux:        http.NewServeMux(),
+		config:     config,
+		log:        log,
 		middleware: middleware,
 	}
 }
@@ -46,8 +46,8 @@ func (h *HTTPServer) RegisterAPIRouters(routers ...*APIVersionRouter) {
 
 func (h *HTTPServer) Run(ctx context.Context) error {
 	mux := core_http_middleware.ChainMiddleware(
-		h.mux, 
-		h.middleware...
+		h.mux,
+		h.middleware...,
 	)
 
 	server := &http.Server{
