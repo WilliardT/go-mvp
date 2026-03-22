@@ -1,43 +1,48 @@
 package core_http_server
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"net/http"
+
+	"go.uber.org/zap"
+
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
 )
 
-
 type HTTPServer struct {
-	mux *http.ServeMux
+	mux    *http.ServeMux
 	config Config
-	log *core_logger.Logger
-} 
+	log    *core_logger.Logger
+}
 
 func NewHTTPServer(
-	config config.Config
-	log *core_logger.Logger
+	config Config,
+	log *core_logger.Logger,
 ) *HTTPServer {
 	return &HTTPServer{
 		mux:    http.NewServeMux(),
 		config: config,
-		log:    log
+		log:    log,
 	}
 }
 
 func (h *HTTPServer) RegisterAPIRouters(routers ...*APIVersionRouter) {
-	for _ , route := range routers {
+	for _, router := range routers {
 		prefix := "/api/" + string(router.apiVersion)
-	
+
 		h.mux.Handle(
-			prefix + "/",
-			http.StripPrefix(prefix, router)
+			prefix+"/",
+			http.StripPrefix(prefix, router),
 		)
 	}
 }
 
 func (h *HTTPServer) Run(ctx context.Context) error {
 	server := &http.Server{
-		Addr: h.config.Addr,
-		Handler: h.mux
+		Addr:    h.config.Addr,
+		Handler: h.mux,
 	}
 
 	ch := make(chan error, 1)
@@ -55,12 +60,12 @@ func (h *HTTPServer) Run(ctx context.Context) error {
 	}()
 
 	select {
-	case err := <- ch:
+	case err := <-ch:
 		if err != nil {
 			return fmt.Errorf("listen and server HTTP: %w", err)
 		}
 
-	case <- ctx.Done():
+	case <-ctx.Done():
 		h.log.Warn("shutdown HTTP server...")
 
 		shutdownCtx, cancel := context.WithTimeout(
@@ -70,10 +75,10 @@ func (h *HTTPServer) Run(ctx context.Context) error {
 
 		defer cancel()
 
-		if err := server.shutdown(shutdownCtx): err != nil {
+		if err := server.Shutdown(shutdownCtx); err != nil {
 			_ = server.Close()
 
-			return
+			return err
 		}
 
 		h.log.Warn("HTTP server stopped")

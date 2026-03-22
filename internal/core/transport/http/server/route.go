@@ -9,13 +9,13 @@ type Route struct {
 }
 
 func NewRoute(
-	method  string,
-	path    string,
-	handler http.HandlerFunc
+	method string,
+	path string,
+	handler http.HandlerFunc,
 ) Route {
 	return Route{
 		Method:  method,
 		Path:    path,
-		Handler: handler
+		Handler: handler,
 	}
 }

@@ -2,8 +2,14 @@ package core_http_middleware
 
 
 import (
+	"context"
 	"net/http"
+	"time"
+
 	"github.com/google/uuid"
+	"go.uber.org/zap"
+
+	core_http_response "github.com/WilliardT/go-mvp/internal/core/transport/http/response"
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
 )
 
@@ -70,7 +76,7 @@ func Panic() Middleware {
 
 func Trace() Middleware {
 	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)) {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			ctx := r.Context()
 			log := core_logger.FromContext(ctx)
 			rw := core_http_response.NewResponseWriter(w)
@@ -86,8 +92,8 @@ func Trace() Middleware {
 
 			log.Debug(
 				"<<< done HTTP request",
-				zap.Int("status_code", rw.GetStatusCodeOrPanic())
-				zap.Duration("latency", time.Now().Sub(before))
+				zap.Int("status_code", rw.GetStatusCodeOrPanic()),
+				zap.Duration("latency", time.Now().Sub(before)),
 			)
 		}
 	}

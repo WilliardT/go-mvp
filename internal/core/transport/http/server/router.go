@@ -1,9 +1,8 @@
 package core_http_server
 
-
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 )
 
 type ApiVersion string
@@ -20,16 +19,16 @@ type APIVersionRouter struct {
 }
 
 func NewAPIVersionRouter(
-	apiVersion ApiVersion
+	apiVersion ApiVersion,
 ) *APIVersionRouter {
-	return &APIVersionRouter {
-		ServeMux: http.NewServeMux(),
-		apiVersion: apiVersion
+	return &APIVersionRouter{
+		ServeMux:   http.NewServeMux(),
+		apiVersion: apiVersion,
 	}
 }
 
 func (r *APIVersionRouter) RegisterRoutes(routes ...Route) {
-	for _ , route := range routes {
+	for _, route := range routes {
 		pattern := fmt.Sprintf("%s %s", route.Method, route.Path)
 
 		r.Handle(pattern, route.Handler)

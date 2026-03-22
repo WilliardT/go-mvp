@@ -2,6 +2,7 @@ package users_transport_http
 
 import (
 	"net/http"
+
 	core_http_server "github.com/WilliardT/go-mvp/internal/core/transport/http/server"
 )
 
@@ -9,11 +10,10 @@ type UsersHTTPHandler struct {
 	usersService usersService
 }
 
-type usersService interface {}
-
+type usersService interface{}
 
 func NewUsersHTTPHandler(
-	usersService usersService
+	usersService usersService,
 ) *UsersHTTPHandler {
 	return &UsersHTTPHandler{
 		usersService: usersService,

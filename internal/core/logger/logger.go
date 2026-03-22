@@ -1,7 +1,15 @@
 package core_logger
 
-import "go.uber.org/zap"
+import (
+	"context"
+	"fmt"
+	"os"
+	"path/filepath"
+	"time"
 
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
 
 type Logger struct {
 	*zap.Logger
@@ -9,8 +17,7 @@ type Logger struct {
 	file *os.File
 }
 
-
-func FromContext(ctx config.Context) *Logger {
+func FromContext(ctx context.Context) *Logger {
 	log, ok := ctx.Value("log").(*Logger)
 
 	if !ok {
@@ -19,7 +26,6 @@ func FromContext(ctx config.Context) *Logger {
 
 	return log
 }
-
 
 func NewLogger(config LoggerConfig) (*Logger, error) {
 	zapLvl := zap.NewAtomicLevel()
@@ -39,7 +45,7 @@ func NewLogger(config LoggerConfig) (*Logger, error) {
 		fmt.Sprintf("%s.log", timestamp),
 	)
 
-	logFile, err := os.OpenFile(logFilePath, os.O_CREATE | os.O_WRONLY, 0644)
+	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
 		return nil, fmt.Errorf("open log file: %w", err)
@@ -56,10 +62,10 @@ func NewLogger(config LoggerConfig) (*Logger, error) {
 	)
 
 	zapLogger := zap.New(core, zap.AddCaller())
-	
+
 	return &Logger{
 		Logger: zapLogger,
-		file: logFile,
+		file:   logFile,
 	}, nil
 
 }
@@ -67,7 +73,7 @@ func NewLogger(config LoggerConfig) (*Logger, error) {
 func (l *Logger) With(fields ...zap.Field) *Logger {
 	return &Logger{
 		Logger: l.Logger.With(fields...),
-		file: l.file,
+		file:   l.file,
 	}
 }
 
