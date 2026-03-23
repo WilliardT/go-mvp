@@ -18,8 +18,8 @@ func (r *UsersRepository) GetUsers(
 
 	query := `
 		SELECT id, version, full_name, phone_number
-		FROM go_mvp_users.users
-		ORDER BY id ASK
+		FROM go_mvp_app.users
+		ORDER BY id ASC
 		LIMIT $1
 		OFFSET $2
 	`
