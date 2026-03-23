@@ -59,7 +59,7 @@ func dtoFromDomain(user domain.User) CreateUserResponse {
 	return CreateUserResponse{
 		ID:          user.ID,
 		Version:     user.Version,
-		FullName:    user.FulltName,
+		FullName:    user.FullName,
 		PhoneNumber: user.PhoneNumber,
 	}
 }

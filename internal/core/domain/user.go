@@ -11,7 +11,7 @@ type User struct {
 	ID      int
 	Version int
 
-	FulltName   string
+	FullName   string
 	PhoneNumber *string
 }
 
@@ -24,7 +24,7 @@ func NewUser(
 	return User{
 		ID:          id,
 		Version:     version,
-		FulltName:   fullName,
+		FullName:   fullName,
 		PhoneNumber: phoneNumber,
 	}
 }
@@ -42,7 +42,7 @@ func NewUserUninitialized(
 }
 
 func (u *User) Validate() error {
-  fullNameLength := len([]rune(u.FulltName))
+  fullNameLength := len([]rune(u.FullName))
 
   if fullNameLength < 3 || fullNameLength > 100 {
     return fmt.Errorf(

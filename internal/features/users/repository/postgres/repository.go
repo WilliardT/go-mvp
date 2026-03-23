@@ -1,9 +1,16 @@
 package users_postgres_repository
 
-type UsersRepository struct {
+import core_postgres_pool "github.com/WilliardT/go-mvp/internal/core/repository/postgres/pool"
 
+
+type UsersRepository struct {
+	pool core_postgres_pool.Pool
 }
 
-func NewUsersRepository() *UsersRepository {
-	return &UsersRepository{}
+func NewUsersRepository(
+	pool core_postgres_pool.Pool,
+) *UsersRepository {
+	return &UsersRepository{
+		pool: pool,
+	}
 }
