@@ -51,19 +51,24 @@ func (h *UsersHTTPHandler) Routes() []core_http_server.Route {
 			Handler: h.CreateUser,
 		},
 		{
-			Method: http.MethodGet,
-			Path: "/users",
+			Method:  http.MethodGet,
+			Path:    "/users",
 			Handler: h.GetUsers,
 		},
 		{
-			Method: http.MethodGet,
-			Path: "/users/{id}",
+			Method:  http.MethodGet,
+			Path:    "/users/{id}",
 			Handler: h.GetUser,
 		},
 		{
-			Method: http.MethodDelete,
-			Path: "/users/{id}",
+			Method:  http.MethodDelete,
+			Path:    "/users/{id}",
 			Handler: h.DeleteUser,
+		},
+		{
+			Method:  http.MethodPatch,
+			Path:    "/users/{id}",
+			Handler: h.PatchUser,
 		},
 	}
 }
