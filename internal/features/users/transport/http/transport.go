@@ -9,10 +9,10 @@ import (
 )
 
 type UsersHTTPHandler struct {
-	usersService usersService
+	usersService UsersService
 }
 
-type usersService interface {
+type UsersService interface {
 	CreateUser(
 		ctx context.Context,
 		user domain.User,
@@ -23,10 +23,15 @@ type usersService interface {
 		limit *int,
 		offset *int,
 	) ([]domain.User, error)
+
+	GetUser(
+		ctx context.Context,
+		id int,
+	) (domain.User, error)
 }
 
 func NewUsersHTTPHandler(
-	usersService usersService,
+	usersService UsersService,
 ) *UsersHTTPHandler {
 	return &UsersHTTPHandler{
 		usersService: usersService,
@@ -44,6 +49,11 @@ func (h *UsersHTTPHandler) Routes() []core_http_server.Route {
 			Method: http.MethodGet,
 			Path: "/users",
 			Handler: h.GetUsers,
+		},
+		{
+			Method: http.MethodGet,
+			Path: "/users/{id}",
+			Handler: h.GetUser,
 		},
 	}
 }
