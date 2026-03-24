@@ -10,7 +10,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-
 func (r *UsersRepository) PatchUser(
 	ctx context.Context,
 	id int,
@@ -34,10 +33,10 @@ func (r *UsersRepository) PatchUser(
 	`
 
 	row := r.pool.QueryRow(
-		ctx, 
-		query, 
-		user.FullName, 
-		user.PhoneNumber, 
+		ctx,
+		query,
+		user.FullName,
+		user.PhoneNumber,
 		id,
 		user.Version,
 	)
@@ -69,6 +68,6 @@ func (r *UsersRepository) PatchUser(
 		userModel.FullName,
 		userModel.PhoneNumber,
 	)
-	
+
 	return userDomain, nil
 }
