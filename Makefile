@@ -12,7 +12,7 @@ env-down:
 env-cleanup:
 	@read -p "Очистить все volume файлы окружения? Опасность утери данных. (y/N): " ans; \
 	if [ "$$ans" = "y" ]; then \
-		docker compose down go-mvp-postgres && \
+		docker compose down go-mvp-postgres port-forwarder && \
 		rm -rf out/pgdata && \
 		echo "Файлы окружения очищены"; \
 	else \
@@ -52,3 +52,8 @@ migrate-action:
 		-database postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@go-mvp-postgres:5432/$(POSTGRES_DB)?sslmode=disable \
 		$(action)
 
+app-run:
+	@export LOGGER_FOLDER=$(PROJECT_ROOT)/out/logs && \
+	export POSTGRES_HOST=localhost && \
+	go mod tidy && \
+	go run cmd/go-mvp-app/main.go
