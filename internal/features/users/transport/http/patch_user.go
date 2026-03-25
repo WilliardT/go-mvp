@@ -1,7 +1,9 @@
 package users_transport_http
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/WilliardT/go-mvp/internal/core/domain"
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
@@ -15,6 +17,36 @@ import (
 type PatchUserRequest struct {
 	FullName    core_http_types.Nullable[string] `json:"full_name"`
 	PhoneNumber core_http_types.Nullable[string] `json:"phone_number"`
+}
+
+func (r *PatchUserRequest) Validate() error {
+	if r.FullName.Set {
+		if r.FullName.Value == nil {
+			return fmt.Errorf("FullName cant`t be NULL")
+		}
+
+		fullNameLen := len([]rune(*r.FullName.Value))
+
+		if fullNameLen < 3 || fullNameLen > 100 {
+			return fmt.Errorf("FullName length must be between 3 and 100 characters")
+		}
+	}
+
+	if r.PhoneNumber.Set {
+		if r.PhoneNumber.Value == nil {
+			phoneNumberLen := len([]rune(*r.PhoneNumber.Value))
+			
+			if phoneNumberLen < 10 || phoneNumberLen > 15 {
+				return fmt.Errorf("PhoneNumber length must be between 10 and 15 characters")
+			}
+
+			if !strings.HasPrefix(*r.PhoneNumber.Value, "+") {
+				return fmt.Errorf("PhoneNumber must start with a '+' symbol")
+			}
+		}
+	}
+
+	return nil
 }
 
 type PatchUserResponse UserDTOResponse
