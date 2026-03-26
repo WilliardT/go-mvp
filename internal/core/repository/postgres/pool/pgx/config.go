@@ -1,4 +1,4 @@
-package core_postgres_pool
+package core_pgx_pool
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 )
+
 
 type Config struct {
 	Host     string        `envconfig:"HOST" required:"true"`
@@ -15,6 +16,7 @@ type Config struct {
 	Database string        `envconfig:"DB" required:"true"`
 	Timeout  time.Duration `envconfig:"TIMEOUT" required:"true"`
 }
+
 
 func NewConfig() (Config, error) {
 	var config Config
