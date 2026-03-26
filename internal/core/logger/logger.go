@@ -15,6 +15,8 @@ type loggerContextKey struct{}
 
 var key = loggerContextKey{}
 
+// todo abstrct Logger interface
+
 type Logger struct {
 	*zap.Logger
 
