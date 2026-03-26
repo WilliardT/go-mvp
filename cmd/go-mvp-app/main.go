@@ -1,5 +1,6 @@
 package main
 
+
 import (
 	"context"
 	"fmt"
@@ -8,7 +9,7 @@ import (
 	"syscall"
 
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
-	core_postgres_pool "github.com/WilliardT/go-mvp/internal/core/repository/postgres/pool"
+	core_pgx_pool "github.com/WilliardT/go-mvp/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/WilliardT/go-mvp/internal/core/transport/http/middleware"
 	core_http_server "github.com/WilliardT/go-mvp/internal/core/transport/http/server"
 	users_postgres_repository "github.com/WilliardT/go-mvp/internal/features/users/repository/postgres"
@@ -16,6 +17,7 @@ import (
 	users_transport_http "github.com/WilliardT/go-mvp/internal/features/users/transport/http"
 	"go.uber.org/zap"
 )
+
 
 func main() {
 	ctx, cancel := signal.NotifyContext(
@@ -36,9 +38,9 @@ func main() {
 
 	logger.Debug("Initializing postgres connection pool...")
 
-	pool, err := core_postgres_pool.NewConnectionPool(
+	pool, err := core_pgx_pool.NewPgxConnectionPool(
 		ctx,
-		core_postgres_pool.NewConfigMust(),
+		core_pgx_pool.NewConfigMust(),
 	)
 
 	if err != nil {
@@ -48,18 +50,21 @@ func main() {
 	defer pool.Close()
 
 	logger.Debug("initializing feature", zap.String("feature", "users"))
+	
 	usersRepository := users_postgres_repository.NewUsersRepository(pool)
 	usersService := users_service.NewUsersService(usersRepository)
 	usersTransportHTTP := users_transport_http.NewUsersHTTPHandler(usersService)
 
 	logger.Debug("initializing HTTP server...")
+	
 	httpServer := core_http_server.NewHTTPServer(
 		core_http_server.NewConfigMust(),
 		logger,
 		core_http_middleware.ReqestID(),
 		core_http_middleware.Logger(logger),
-		core_http_middleware.Panic(),
 		core_http_middleware.Trace(),
+		core_http_middleware.Panic(),
+
 	)
 
 	apiVersionRouter := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion1)
