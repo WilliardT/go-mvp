@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
+	core_http_request "github.com/WilliardT/go-mvp/internal/core/transport/http/request"
 	core_http_response "github.com/WilliardT/go-mvp/internal/core/transport/http/response"
-	core_http_utils "github.com/WilliardT/go-mvp/internal/core/transport/http/utils"
 )
 
 
@@ -20,7 +20,7 @@ func (h *UsersHTTPHandler) GetUser(
 	log := core_logger.FromContext(ctx)
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 
-	userID, err := core_http_utils.GetIntPathValue(r, "id")
+	userID, err := core_http_request.GetIntPathValue(r, "id")
 
 	if err != nil {
 		responseHandler.ErrorResponse(

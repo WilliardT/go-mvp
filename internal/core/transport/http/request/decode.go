@@ -1,5 +1,6 @@
 package core_http_request
 
+
 import (
 	"encoding/json"
 	"fmt"
@@ -9,11 +10,13 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+
 var requestValidator = validator.New()
 
 type validatable interface {
 	Validate() error
 }
+
 
 func DecodeAndValidateRequest(
 	r *http.Request,
