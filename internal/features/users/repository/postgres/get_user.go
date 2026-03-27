@@ -21,7 +21,7 @@ func (r *UsersRepository) GetUser(
 	query := `
 		SELECT id, version, full_name, phone_number
 		FROM go_mvp_app.users
-		WHERE id = $1
+		WHERE id = $1;
 	`
 
 	row := r.pool.QueryRow(ctx, query, id)
