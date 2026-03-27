@@ -2,9 +2,12 @@ package products_postgres_repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/WilliardT/go-mvp/internal/core/domain"
+	core_errors "github.com/WilliardT/go-mvp/internal/core/errors"
+	core_postgres_pool "github.com/WilliardT/go-mvp/internal/core/repository/postgres/pool"
 )
 
 func (r *ProductsRepository) CreateProduct(
@@ -57,8 +60,28 @@ func (r *ProductsRepository) CreateProduct(
 		&productModel.AuthorUserID,
 	)
 	if err != nil {
+		if errors.Is(err, core_postgres_pool.ErrViolatesForeignKey) {
+			return domain.Product{}, fmt.Errorf(
+				"%v: user with id='%d': %w",
+				err,
+				product.AuthorUserID,
+				core_errors.ErrNotFound,
+			)
+		}
+
 		return domain.Product{}, fmt.Errorf("scan error: %w", err)
 	}
 
-	return productDomainFromModel(productModel), nil
+	productDomain := domain.NewProduct(
+		productModel.ID,
+		productModel.Version,
+		productModel.Title,
+		productModel.Description,
+		productModel.Price,
+		productModel.CreatedAt,
+		productModel.UpdatedAt,
+		productModel.AuthorUserID,
+	)
+
+	return productDomain, nil
 }
