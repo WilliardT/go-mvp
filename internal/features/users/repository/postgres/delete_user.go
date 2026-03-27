@@ -17,7 +17,7 @@ func (r *UsersRepository) DeleteUser(
 
 	query := `
 		DELETE FROM go_mvp_app.users
-		WHERE id = $1
+		WHERE id = $1;
 	`
 
 	cmdTag, err := r.pool.Exec(ctx, query, id)
