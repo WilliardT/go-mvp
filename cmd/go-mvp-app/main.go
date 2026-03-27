@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
 	core_pgx_pool "github.com/WilliardT/go-mvp/internal/core/repository/postgres/pool/pgx"
@@ -20,7 +21,15 @@ import (
 	"go.uber.org/zap"
 )
 
+
+var (
+	timeZone = time.UTC
+)
+
+
 func main() {
+	time.Local = timeZone
+
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),
 		syscall.SIGINT, syscall.SIGTERM,
@@ -36,6 +45,8 @@ func main() {
 		os.Exit(1)
 	}
 	defer logger.Close()
+
+	logger.Debug("application time zone", zap.Any("zone", timeZone))
 
 	logger.Debug("Initializing postgres connection pool...")
 
