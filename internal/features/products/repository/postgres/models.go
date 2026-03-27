@@ -7,14 +7,14 @@ import (
 )
 
 type ProductModel struct {
-	ID          int
-	Version     int
-	Title       string
-	Description *string
-	Price       float64
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	UserID      int
+	ID           int
+	Version      int
+	Title        string
+	Description  *string
+	Price        float64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	AuthorUserID int
 }
 
 func productDomainFromModel(product ProductModel) domain.Product {
@@ -26,7 +26,7 @@ func productDomainFromModel(product ProductModel) domain.Product {
 		product.Price,
 		product.CreatedAt,
 		product.UpdatedAt,
-		product.UserID,
+		product.AuthorUserID,
 	)
 }
 

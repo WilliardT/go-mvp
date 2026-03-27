@@ -10,10 +10,10 @@ import (
 )
 
 type CreateProductRequest struct {
-	Title       string  `json:"title" validate:"required,min=1,max=100"`
-	Description *string `json:"description" validate:"omitempty,min=1,max=100"`
-	Price       float64 `json:"price" validate:"required,gt=0"`
-	UserID      int     `json:"user_id" validate:"required,gt=0"`
+	Title        string  `json:"title" validate:"required,min=1,max=100"`
+	Description  *string `json:"description" validate:"omitempty,min=1,max=100"`
+	Price        float64 `json:"price" validate:"required,gt=0"`
+	AuthorUserID int     `json:"author_user_id" validate:"required,gt=0"`
 }
 
 type CreateProductResponse ProductDTOResponse
@@ -55,6 +55,6 @@ func domainFromDTO(dto CreateProductRequest) domain.Product {
 		dto.Title,
 		dto.Description,
 		dto.Price,
-		dto.UserID,
+		dto.AuthorUserID,
 	)
 }

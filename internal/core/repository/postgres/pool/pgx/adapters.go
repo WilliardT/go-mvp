@@ -25,6 +25,7 @@ func (r pgxRow) Scan(dest ...any) error {
 			return core_postgres_pool.ErrNoRows
 		}
 
+
 		return err
 	}
 

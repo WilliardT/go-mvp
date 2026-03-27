@@ -21,7 +21,7 @@ func (r *ProductsRepository) CreateProduct(
 			price,
 			created_at,
 			updated_at,
-			user_id
+			author_user_id
 		)
 		VALUES ($1, $2, $3, NOW(), NOW(), $4)
 		RETURNING
@@ -32,7 +32,7 @@ func (r *ProductsRepository) CreateProduct(
 			price::float8,
 			created_at,
 			updated_at,
-			user_id;
+			author_user_id;
 	`
 
 	row := r.pool.QueryRow(
@@ -41,7 +41,7 @@ func (r *ProductsRepository) CreateProduct(
 		product.Title,
 		product.Description,
 		product.Price,
-		product.UserID,
+		product.AuthorUserID,
 	)
 
 	var productModel ProductModel
@@ -54,7 +54,7 @@ func (r *ProductsRepository) CreateProduct(
 		&productModel.Price,
 		&productModel.CreatedAt,
 		&productModel.UpdatedAt,
-		&productModel.UserID,
+		&productModel.AuthorUserID,
 	)
 	if err != nil {
 		return domain.Product{}, fmt.Errorf("scan error: %w", err)

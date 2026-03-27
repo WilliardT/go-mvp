@@ -4,4 +4,5 @@ import "errors"
 
 var (
 	ErrNoRows = errors.New("no rows")
+	ErrViolatesForeignKey = errors.New("violates foreign key")
 )

@@ -25,7 +25,7 @@ func (r *ProductsRepository) PatchProduct(
 			description = $2,
 			price = $3,
 			updated_at = NOW(),
-			user_id = $4,
+			author_user_id = $4,
 			version = version + 1
 		WHERE id = $5 AND version = $6
 		RETURNING
@@ -36,7 +36,7 @@ func (r *ProductsRepository) PatchProduct(
 			price::float8,
 			created_at,
 			updated_at,
-			user_id;
+			author_user_id;
 	`
 
 	row := r.pool.QueryRow(
@@ -45,7 +45,7 @@ func (r *ProductsRepository) PatchProduct(
 		product.Title,
 		product.Description,
 		product.Price,
-		product.UserID,
+		product.AuthorUserID,
 		id,
 		product.Version,
 	)
@@ -60,7 +60,7 @@ func (r *ProductsRepository) PatchProduct(
 		&productModel.Price,
 		&productModel.CreatedAt,
 		&productModel.UpdatedAt,
-		&productModel.UserID,
+		&productModel.AuthorUserID,
 	)
 	if err != nil {
 		if errors.Is(err, core_postgres_pool.ErrNoRows) {

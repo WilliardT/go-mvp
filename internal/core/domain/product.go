@@ -11,12 +11,12 @@ type Product struct {
 	ID      int
 	Version int
 
-	Title       string
-	Description *string
-	Price       float64
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	UserID      int
+	Title        string
+	Description  *string
+	Price        float64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	AuthorUserID int
 }
 
 func NewProduct(
@@ -27,17 +27,17 @@ func NewProduct(
 	price float64,
 	createdAt time.Time,
 	updatedAt time.Time,
-	userID int,
+	authorUserID int,
 ) Product {
 	return Product{
-		ID:          id,
-		Version:     version,
-		Title:       title,
-		Description: description,
-		Price:       price,
-		CreatedAt:   createdAt,
-		UpdatedAt:   updatedAt,
-		UserID:      userID,
+		ID:           id,
+		Version:      version,
+		Title:        title,
+		Description:  description,
+		Price:        price,
+		CreatedAt:    createdAt,
+		UpdatedAt:    updatedAt,
+		AuthorUserID: authorUserID,
 	}
 }
 
@@ -45,7 +45,7 @@ func NewProductUninitialized(
 	title string,
 	description *string,
 	price float64,
-	userID int,
+	authorUserID int,
 ) Product {
 	return NewProduct(
 		UninitializedID,
@@ -55,7 +55,7 @@ func NewProductUninitialized(
 		price,
 		time.Time{},
 		time.Time{},
-		userID,
+		authorUserID,
 	)
 }
 
@@ -90,10 +90,10 @@ func (p *Product) Validate() error {
 		)
 	}
 
-	if p.UserID <= 0 {
+	if p.AuthorUserID <= 0 {
 		return fmt.Errorf(
-			"invalid `UserID`: %d: %w",
-			p.UserID,
+			"invalid `AuthorUserID`: %d: %w",
+			p.AuthorUserID,
 			core_errors.ErrInvalidArgument,
 		)
 	}
@@ -102,23 +102,23 @@ func (p *Product) Validate() error {
 }
 
 type ProductPatch struct {
-	Title       Nullable[string]
-	Description Nullable[string]
-	Price       Nullable[float64]
-	UserID      Nullable[int]
+	Title        Nullable[string]
+	Description  Nullable[string]
+	Price        Nullable[float64]
+	AuthorUserID Nullable[int]
 }
 
 func NewProductPatch(
 	title Nullable[string],
 	description Nullable[string],
 	price Nullable[float64],
-	userID Nullable[int],
+	authorUserID Nullable[int],
 ) ProductPatch {
 	return ProductPatch{
-		Title:       title,
-		Description: description,
-		Price:       price,
-		UserID:      userID,
+		Title:        title,
+		Description:  description,
+		Price:        price,
+		AuthorUserID: authorUserID,
 	}
 }
 
@@ -137,9 +137,9 @@ func (p *ProductPatch) Validate() error {
 		)
 	}
 
-	if p.UserID.Set && p.UserID.Value == nil {
+	if p.AuthorUserID.Set && p.AuthorUserID.Value == nil {
 		return fmt.Errorf(
-			"UserID can`t be patched to NULL: %w",
+			"AuthorUserID can`t be patched to NULL: %w",
 			core_errors.ErrInvalidArgument,
 		)
 	}
@@ -176,10 +176,10 @@ func (p *ProductPatch) Validate() error {
 		)
 	}
 
-	if p.UserID.Set && p.UserID.Value != nil && *p.UserID.Value <= 0 {
+	if p.AuthorUserID.Set && p.AuthorUserID.Value != nil && *p.AuthorUserID.Value <= 0 {
 		return fmt.Errorf(
-			"invalid `UserID`: %d: %w",
-			*p.UserID.Value,
+			"invalid `AuthorUserID`: %d: %w",
+			*p.AuthorUserID.Value,
 			core_errors.ErrInvalidArgument,
 		)
 	}
@@ -206,8 +206,8 @@ func (p *Product) ApplyPatch(patch ProductPatch) error {
 		tmp.Price = *patch.Price.Value
 	}
 
-	if patch.UserID.Set {
-		tmp.UserID = *patch.UserID.Value
+	if patch.AuthorUserID.Set {
+		tmp.AuthorUserID = *patch.AuthorUserID.Value
 	}
 
 	if err := tmp.Validate(); err != nil {

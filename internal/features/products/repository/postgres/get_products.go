@@ -24,7 +24,7 @@ func (r *ProductsRepository) GetProducts(
 			price::float8,
 			created_at,
 			updated_at,
-			user_id
+			author_user_id
 		FROM go_mvp_app.products
 		ORDER BY id ASC
 		LIMIT $1
@@ -56,7 +56,7 @@ func (r *ProductsRepository) GetProducts(
 			&productModel.Price,
 			&productModel.CreatedAt,
 			&productModel.UpdatedAt,
-			&productModel.UserID,
+			&productModel.AuthorUserID,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("scan products: %w", err)

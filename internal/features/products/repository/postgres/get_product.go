@@ -26,7 +26,7 @@ func (r *ProductsRepository) GetProduct(
 			price::float8,
 			created_at,
 			updated_at,
-			user_id
+			author_user_id
 		FROM go_mvp_app.products
 		WHERE id = $1;
 	`
@@ -43,7 +43,7 @@ func (r *ProductsRepository) GetProduct(
 		&productModel.Price,
 		&productModel.CreatedAt,
 		&productModel.UpdatedAt,
-		&productModel.UserID,
+		&productModel.AuthorUserID,
 	)
 	if err != nil {
 		if errors.Is(err, core_postgres_pool.ErrNoRows) {

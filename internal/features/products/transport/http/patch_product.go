@@ -12,10 +12,10 @@ import (
 )
 
 type PatchProductRequest struct {
-	Title       core_http_types.Nullable[string]  `json:"title"`
-	Description core_http_types.Nullable[string]  `json:"description"`
-	Price       core_http_types.Nullable[float64] `json:"price"`
-	UserID      core_http_types.Nullable[int]     `json:"user_id"`
+	Title        core_http_types.Nullable[string]  `json:"title"`
+	Description  core_http_types.Nullable[string]  `json:"description"`
+	Price        core_http_types.Nullable[float64] `json:"price"`
+	AuthorUserID core_http_types.Nullable[int]     `json:"author_user_id"`
 }
 
 func (r *PatchProductRequest) Validate() error {
@@ -49,13 +49,13 @@ func (r *PatchProductRequest) Validate() error {
 		}
 	}
 
-	if r.UserID.Set {
-		if r.UserID.Value == nil {
-			return fmt.Errorf("UserID cant`t be NULL")
+	if r.AuthorUserID.Set {
+		if r.AuthorUserID.Value == nil {
+			return fmt.Errorf("AuthorUserID cant`t be NULL")
 		}
 
-		if *r.UserID.Value <= 0 {
-			return fmt.Errorf("UserID must be greater than 0")
+		if *r.AuthorUserID.Value <= 0 {
+			return fmt.Errorf("AuthorUserID must be greater than 0")
 		}
 	}
 
@@ -115,6 +115,6 @@ func productPatchFromRequest(request PatchProductRequest) domain.ProductPatch {
 		request.Title.ToDomain(),
 		request.Description.ToDomain(),
 		request.Price.ToDomain(),
-		request.UserID.ToDomain(),
+		request.AuthorUserID.ToDomain(),
 	)
 }
