@@ -16,11 +16,12 @@ func (h *ProductsHTTPHandler) GetProducts(rw http.ResponseWriter, r *http.Reques
 	log := core_logger.FromContext(ctx)
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 
-	limit, offset, err := getLimitOffsetQueryParams(r)
+	userID, limit, offset, err := getUsedIdLimitOffsetQueryParams(r)
+	
 	if err != nil {
 		responseHandler.ErrorResponse(
 			err,
-			"failed to get 'limit' / 'offset' query param",
+			"failed to get 'userId / limit' / 'offset' query param",
 		)
 
 		return
@@ -41,21 +42,29 @@ func (h *ProductsHTTPHandler) GetProducts(rw http.ResponseWriter, r *http.Reques
 	responseHandler.JSONResponse(response, http.StatusOK)
 }
 
-func getLimitOffsetQueryParams(r *http.Request) (*int, *int, error) {
+func getUsedIdLimitOffsetQueryParams(r *http.Request) (*int, *int, *int, error) {
 	const (
+		usedIdQueryParamKey = "author_user_id"
 		limitQueryParamKey  = "limit"
 		offsetQueryParamKey = "offset"
 	)
 
-	limit, err := core_http_request.GetIntQueryParam(r, limitQueryParamKey)
+	userID, err := core_http_request.GetIntQueryParam(r, usedIdQueryParamKey)
 	if err != nil {
-		return nil, nil, fmt.Errorf("get 'limit' query param: %w", err)
+		return nil, nil, nil, fmt.Errorf("get 'author_user_id' query param: %w", err)
+	}
+
+	limit, err := core_http_request.GetIntQueryParam(r, limitQueryParamKey)
+	
+	if err != nil {
+		return nil, nil, nil, fmt.Errorf("get 'limit' query param: %w", err)
 	}
 
 	offset, err := core_http_request.GetIntQueryParam(r, offsetQueryParamKey)
+	
 	if err != nil {
-		return nil, nil, fmt.Errorf("get 'offset' query param: %w", err)
+		return nil, nil, nil, fmt.Errorf("get 'offset' query param: %w", err)
 	}
 
-	return limit, offset, nil
+	return userID, limit, offset, nil
 }
