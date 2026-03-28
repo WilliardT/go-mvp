@@ -52,6 +52,16 @@ migrate-action:
 		-database postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@go-mvp-postgres:5432/$(POSTGRES_DB)?sslmode=disable \
 		$(action)
 
+logs-cleanup:
+	@read -p "Очистить все лог файлы? Опасность утери логов. (y/N): " ans; \
+	if [ "$$ans" = "y" ]; then \
+		rm -rf ${PROJECT_ROOT}/out/logs && \
+		echo "Файлы логов очищены"; \
+	else \
+		echo "Очистка логов отменена"; \
+	fi
+
+
 app-run:
 	@export LOGGER_FOLDER=$(PROJECT_ROOT)/out/logs && \
 	export POSTGRES_HOST=localhost && \
