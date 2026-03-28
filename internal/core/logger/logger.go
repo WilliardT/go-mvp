@@ -93,6 +93,6 @@ func (l *Logger) With(fields ...zap.Field) *Logger {
 
 func (l *Logger) Close() {
 	if err := l.file.Close(); err != nil {
-		fmt.Printf("failed to close application logger:", err)
+		fmt.Printf("failed to close application logger: %v", err)
 	}
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/WilliardT/go-mvp/internal/core/domain"
 )
 
-
 func (r *UsersRepository) GetUsers(
 	ctx context.Context,
 	limit *int,
@@ -25,9 +24,9 @@ func (r *UsersRepository) GetUsers(
 	`
 
 	rows, err := r.pool.Query(
-		ctx, 
-		query, 
-		limit, 
+		ctx,
+		query,
+		limit,
 		offset,
 	)
 
@@ -57,7 +56,7 @@ func (r *UsersRepository) GetUsers(
 	}
 
 	if err := rows.Err(); err != nil {
-		 return nil, fmt.Errorf("next rows: %w", err)
+		return nil, fmt.Errorf("next rows: %w", err)
 	}
 
 	userDomains := userDomainsFromModels(usersModels)

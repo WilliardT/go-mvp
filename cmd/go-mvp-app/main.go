@@ -1,17 +1,21 @@
 package main
 
-
 import (
 	"context"
 	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
+	core_config "github.com/WilliardT/go-mvp/internal/core/config"
 	core_logger "github.com/WilliardT/go-mvp/internal/core/logger"
 	core_pgx_pool "github.com/WilliardT/go-mvp/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/WilliardT/go-mvp/internal/core/transport/http/middleware"
 	core_http_server "github.com/WilliardT/go-mvp/internal/core/transport/http/server"
+	products_postgres_repository "github.com/WilliardT/go-mvp/internal/features/products/repository/postgres"
+	products_service "github.com/WilliardT/go-mvp/internal/features/products/service"
+	products_transport_http "github.com/WilliardT/go-mvp/internal/features/products/transport/http"
 	users_postgres_repository "github.com/WilliardT/go-mvp/internal/features/users/repository/postgres"
 	users_service "github.com/WilliardT/go-mvp/internal/features/users/service"
 	users_transport_http "github.com/WilliardT/go-mvp/internal/features/users/transport/http"
@@ -19,7 +23,11 @@ import (
 )
 
 
+
 func main() {
+	cfg := core_config.NewConfigMust()
+	time.Local = cfg.TimeZone
+
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),
 		syscall.SIGINT, syscall.SIGTERM,
@@ -36,6 +44,8 @@ func main() {
 	}
 	defer logger.Close()
 
+	logger.Debug("application time zone", zap.Any("zone", time.Local))
+
 	logger.Debug("Initializing postgres connection pool...")
 
 	pool, err := core_pgx_pool.NewPgxConnectionPool(
@@ -50,13 +60,19 @@ func main() {
 	defer pool.Close()
 
 	logger.Debug("initializing feature", zap.String("feature", "users"))
-	
+
 	usersRepository := users_postgres_repository.NewUsersRepository(pool)
 	usersService := users_service.NewUsersService(usersRepository)
 	usersTransportHTTP := users_transport_http.NewUsersHTTPHandler(usersService)
 
+	logger.Debug("initializing feature", zap.String("feature", "products"))
+
+	productsRepository := products_postgres_repository.NewProductsRepository(pool)
+	productsService := products_service.NewProductsService(productsRepository)
+	productsTransportHTTP := products_transport_http.NewProductsHTTPHandler(productsService)
+
 	logger.Debug("initializing HTTP server...")
-	
+
 	httpServer := core_http_server.NewHTTPServer(
 		core_http_server.NewConfigMust(),
 		logger,
@@ -64,11 +80,11 @@ func main() {
 		core_http_middleware.Logger(logger),
 		core_http_middleware.Trace(),
 		core_http_middleware.Panic(),
-
 	)
 
 	apiVersionRouter := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion1)
 	apiVersionRouter.RegisterRoutes(usersTransportHTTP.Routes()...)
+	apiVersionRouter.RegisterRoutes(productsTransportHTTP.Routes()...)
 	httpServer.RegisterAPIRouters(apiVersionRouter)
 
 	if err := httpServer.Run(ctx); err != nil {
