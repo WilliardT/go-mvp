@@ -9,6 +9,7 @@ import (
 
 func (r *ProductsRepository) GetProducts(
 	ctx context.Context,
+	authorUserID *int,
 	limit *int,
 	offset *int,
 ) ([]domain.Product, error) {
@@ -26,14 +27,16 @@ func (r *ProductsRepository) GetProducts(
 			updated_at,
 			author_user_id
 		FROM go_mvp_app.products
+		WHERE ($1::int IS NULL OR author_user_id = $1)
 		ORDER BY id ASC
-		LIMIT $1
-		OFFSET $2;
+		LIMIT $2
+		OFFSET $3;
 	`
 
 	rows, err := r.pool.Query(
 		ctx,
 		query,
+		authorUserID,
 		limit,
 		offset,
 	)

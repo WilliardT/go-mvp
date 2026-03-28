@@ -20,6 +20,7 @@ type ProductsService interface {
 
 	GetProducts(
 		ctx context.Context,
+		authorUserID *int,
 		limit *int,
 		offset *int,
 	) ([]domain.Product, error)

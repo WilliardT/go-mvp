@@ -17,17 +17,17 @@ func (h *ProductsHTTPHandler) GetProducts(rw http.ResponseWriter, r *http.Reques
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 
 	userID, limit, offset, err := getUsedIdLimitOffsetQueryParams(r)
-	
+
 	if err != nil {
 		responseHandler.ErrorResponse(
 			err,
-			"failed to get 'userId / limit' / 'offset' query param",
+			"failed to get 'author_user_id / limit / offset' query param",
 		)
 
 		return
 	}
 
-	productDomains, err := h.productsService.GetProducts(ctx, limit, offset)
+	productDomains, err := h.productsService.GetProducts(ctx, userID, limit, offset)
 	if err != nil {
 		responseHandler.ErrorResponse(
 			err,
@@ -55,13 +55,13 @@ func getUsedIdLimitOffsetQueryParams(r *http.Request) (*int, *int, *int, error) 
 	}
 
 	limit, err := core_http_request.GetIntQueryParam(r, limitQueryParamKey)
-	
+
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("get 'limit' query param: %w", err)
 	}
 
 	offset, err := core_http_request.GetIntQueryParam(r, offsetQueryParamKey)
-	
+
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("get 'offset' query param: %w", err)
 	}

@@ -10,9 +10,17 @@ import (
 
 func (s *ProductsService) GetProducts(
 	ctx context.Context,
+	authorUserID *int,
 	limit *int,
 	offset *int,
 ) ([]domain.Product, error) {
+	if authorUserID != nil && *authorUserID <= 0 {
+		return nil, fmt.Errorf(
+			"author user id must be positive: %w",
+			core_errors.ErrInvalidArgument,
+		)
+	}
+
 	if limit != nil && *limit < 0 {
 		return nil, fmt.Errorf(
 			"limit must be non-negative: %w",
@@ -29,6 +37,7 @@ func (s *ProductsService) GetProducts(
 
 	products, err := s.productsRepository.GetProducts(
 		ctx,
+		authorUserID,
 		limit,
 		offset,
 	)
