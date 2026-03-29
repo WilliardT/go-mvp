@@ -68,8 +68,8 @@ app-run:
 	go mod tidy && \
 	go run ${PROJECT_ROOT}/cmd/go-mvp-app/main.go
 
-goapp-deploy:
-	@docker compose up -d --build go-mvp-app
+go-app-deploy:
+	@docker compose up -d --build goapp
 
 ps:
 	@docker compose ps
