@@ -28,6 +28,11 @@ import (
 )
 
 
+// @title       Go MVP API
+// @version     1.0
+// @description GO MVP application REST-API schema
+// @host        localhost:5050
+// @BasePath    /api/v1
 func main() {
 	cfg := core_config.NewConfigMust()
 	time.Local = cfg.TimeZone
