@@ -27,6 +27,8 @@ func (r *StatisticsRepository) GetProductsStatistics(
 			AND ($3::timestamptz IS NULL OR created_at < ($3::timestamptz + INTERVAL '1 day'));
 	`
 
+	// можно сделать через append к строке
+
 	var statisticsModel StatisticsModel
 
 	err := r.pool.QueryRow(
