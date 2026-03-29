@@ -23,7 +23,10 @@ import (
 	users_service "github.com/WilliardT/go-mvp/internal/features/users/service"
 	users_transport_http "github.com/WilliardT/go-mvp/internal/features/users/transport/http"
 	"go.uber.org/zap"
+
+	_ "github.com/WilliardT/go-mvp/docs"
 )
+
 
 func main() {
 	cfg := core_config.NewConfigMust()
@@ -93,7 +96,10 @@ func main() {
 	apiVersionRouter.RegisterRoutes(usersTransportHTTP.Routes()...)
 	apiVersionRouter.RegisterRoutes(productsTransportHTTP.Routes()...)
 	apiVersionRouter.RegisterRoutes(statisticsTransportHTTP.Routes()...)
+	
 	httpServer.RegisterAPIRouters(apiVersionRouter)
+
+	httpServer.RegisterSwagger()
 
 	if err := httpServer.Run(ctx); err != nil {
 		logger.Error("HTTP server run error", zap.Error(err))
