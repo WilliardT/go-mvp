@@ -4,8 +4,10 @@ services:
       context: ${PROJECT_ROOT}
       dockerfile: ${PROJECT_ROOT}/cmd/go-mvp-app/Dockerfile
     container_name: go-mvp-app
+    depends_on:
+      - go-mvp-postgres
     environment:
-      - HTTP_ADDR=":5050"
+      - HTTP_ADDR=:5050
       - HTTP_SHUTDOWN_TIMEOUT=${HTTP_SHUTDOWN_TIMEOUT}
       - POSTGRES_HOST=go-mvp-postgres
       - POSTGRES_USER=${POSTGRES_USER}
