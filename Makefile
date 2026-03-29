@@ -69,4 +69,7 @@ app-run:
 	go run ${PROJECT_ROOT}/cmd/go-mvp-app/main.go
 
 goapp-deploy:
-	docker compose up -d --build go-mvp-app
+	@docker compose up -d --build go-mvp-app
+
+ps:
+	@docker compose ps
