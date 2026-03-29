@@ -16,13 +16,14 @@ import (
 	products_postgres_repository "github.com/WilliardT/go-mvp/internal/features/products/repository/postgres"
 	products_service "github.com/WilliardT/go-mvp/internal/features/products/service"
 	products_transport_http "github.com/WilliardT/go-mvp/internal/features/products/transport/http"
+	statistics_postgres_repository "github.com/WilliardT/go-mvp/internal/features/statistics/repository/postgres"
+	statistics_service "github.com/WilliardT/go-mvp/internal/features/statistics/service"
+	statistics_transport_http "github.com/WilliardT/go-mvp/internal/features/statistics/transport/http"
 	users_postgres_repository "github.com/WilliardT/go-mvp/internal/features/users/repository/postgres"
 	users_service "github.com/WilliardT/go-mvp/internal/features/users/service"
 	users_transport_http "github.com/WilliardT/go-mvp/internal/features/users/transport/http"
 	"go.uber.org/zap"
 )
-
-
 
 func main() {
 	cfg := core_config.NewConfigMust()
@@ -71,6 +72,12 @@ func main() {
 	productsService := products_service.NewProductsService(productsRepository)
 	productsTransportHTTP := products_transport_http.NewProductsHTTPHandler(productsService)
 
+	logger.Debug("initializing feature", zap.String("feature", "statistics"))
+
+	statisticsRepository := statistics_postgres_repository.NewStatisticsRepository(pool)
+	statisticsService := statistics_service.NewStatisticsService(statisticsRepository)
+	statisticsTransportHTTP := statistics_transport_http.NewStatisticsHTTPHandler(statisticsService)
+
 	logger.Debug("initializing HTTP server...")
 
 	httpServer := core_http_server.NewHTTPServer(
@@ -85,6 +92,7 @@ func main() {
 	apiVersionRouter := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion1)
 	apiVersionRouter.RegisterRoutes(usersTransportHTTP.Routes()...)
 	apiVersionRouter.RegisterRoutes(productsTransportHTTP.Routes()...)
+	apiVersionRouter.RegisterRoutes(statisticsTransportHTTP.Routes()...)
 	httpServer.RegisterAPIRouters(apiVersionRouter)
 
 	if err := httpServer.Run(ctx); err != nil {
