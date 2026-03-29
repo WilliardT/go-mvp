@@ -74,5 +74,14 @@ go-app-deploy:
 go-app-undeploy:
 	@docker compose down goapp
 
+swagger-gen:
+	@docker compose build swagger
+	@docker compose run --rm swagger \
+		init \
+		-g cmd/go-mvp-app/main.go \
+		-o docs \
+		--parseInternal \
+		--parseDependency
+
 ps:
 	@docker compose ps
