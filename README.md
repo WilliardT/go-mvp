@@ -1,15 +1,31 @@
-base GOlang app
+## Локальный запуск
 
-first start:
+```bash
+make env-up
+make migrate-up
+make env-port-forward
+make app-run
+```
 
-    make env-up
+## Запуск в Docker
 
-    make migrate-up
+```bash
+make migrate-up
+make go-app-deploy
+make ps
+```
 
-    make env-port-forward
+Важно: `go-app-deploy` не накатывает миграции автоматически, их нужно запускать отдельно.
 
-    make app-run
+## Полезные команды Makefile
 
- ---   
+## Конфиг
 
-все команды в project/Makefile
+Основные нужные переменные лежат в `.env-example`:
+- `HTTP_ADDR`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_DB`
+- `POSTGRES_TIMEOUT`
+- `LOGGER_LEVEL`
+- `TIME_ZONE`
