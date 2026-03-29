@@ -67,3 +67,9 @@ app-run:
 	export POSTGRES_HOST=localhost && \
 	go mod tidy && \
 	go run ${PROJECT_ROOT}/cmd/go-mvp-app/main.go
+
+go-app-deploy:
+	@docker compose up -d --build go-mvp-postgres goapp
+
+ps:
+	@docker compose ps
