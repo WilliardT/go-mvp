@@ -71,5 +71,8 @@ app-run:
 go-app-deploy:
 	@docker compose up -d --build go-mvp-postgres goapp
 
+go-app-undeploy:
+	@docker compose down goapp
+
 ps:
 	@docker compose ps
