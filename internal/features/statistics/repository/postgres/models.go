@@ -20,5 +20,6 @@ func statisticsDomainFromModel(model StatisticsModel) domain.Statistics {
 	return domain.NewStatistics(
 		model.ProductsCount,
 		productPriceMedian,
+		domain.ProductPriceRanges{},
 	)
 }

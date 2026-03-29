@@ -14,6 +14,11 @@ import (
 type GetStatisticsResponse struct {
 	ProductsCount      int      `json:"products_count"`
 	ProductPriceMedian *float64 `json:"product_price_median"`
+	ProductPriceRanges struct {
+		Cheap     int `json:"cheap"`
+		Medium    int `json:"medium"`
+		Expensive int `json:"expensive"`
+	} `json:"price_ranges"`
 }
 
 func (h *StatisticsHTTPHandler) GetProductsStatistics(
@@ -60,6 +65,15 @@ func toDTOFromDomain(statistics domain.Statistics) GetStatisticsResponse {
 	return GetStatisticsResponse{
 		ProductsCount:      statistics.ProductsCount,
 		ProductPriceMedian: statistics.ProductPriceMedian,
+		ProductPriceRanges: struct {
+			Cheap     int `json:"cheap"`
+			Medium    int `json:"medium"`
+			Expensive int `json:"expensive"`
+		}{
+			Cheap:     statistics.ProductPriceRanges.Cheap,
+			Medium:    statistics.ProductPriceRanges.Medium,
+			Expensive: statistics.ProductPriceRanges.Expensive,
+		},
 	}
 }
 

@@ -18,6 +18,13 @@ type StatisticsRepository interface {
 		createdFrom *time.Time,
 		createdTo *time.Time,
 	) (domain.Statistics, error)
+
+	GetProductsPrices(
+		ctx context.Context,
+		authorUserID *int,
+		createdFrom *time.Time,
+		createdTo *time.Time,
+	) ([]float64, error)
 }
 
 func NewStatisticsService(

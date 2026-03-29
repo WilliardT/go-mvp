@@ -42,5 +42,20 @@ func (s *StatisticsService) GetProductsStatistics(
 		)
 	}
 
+	prices, err := s.statisticsRepository.GetProductsPrices(
+		ctx,
+		authorUserID,
+		createdFrom,
+		createdTo,
+	)
+	if err != nil {
+		return domain.Statistics{}, fmt.Errorf(
+			"get product prices from repository: %w",
+			err,
+		)
+	}
+
+	statistics.ProductPriceRanges = calcProductPriceRanges(prices)
+
 	return statistics, nil
 }
