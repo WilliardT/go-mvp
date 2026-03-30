@@ -1,4 +1,4 @@
-## Локальный запуск
+## Запуск локально
 
 ```bash
 make env-up
@@ -15,13 +15,24 @@ make go-app-deploy
 make ps
 ```
 
-Важно: `go-app-deploy` не накатывает миграции автоматически, их нужно запускать отдельно.
+`go-app-deploy` не накатывает миграции автоматически, их нужно запускать отдельно.
 
-## Полезные команды Makefile
+## Swagger
+
+Сгенерировать документацию:
+
+```bash
+make swagger-gen
+```
+
+Swagger UI:
+
+- `http://localhost:5050/swagger/index.html`
 
 ## Конфиг
 
-Основные нужные переменные лежат в `.env-example`:
+Основные переменные в `.env` лежат в `.env-example`:
+
 - `HTTP_ADDR`
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
