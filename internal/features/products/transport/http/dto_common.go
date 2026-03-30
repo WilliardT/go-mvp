@@ -7,14 +7,14 @@ import (
 )
 
 type ProductDTOResponse struct {
-	ID           int       `json:"id"`
-	Version      int       `json:"version"`
-	Title        string    `json:"title"`
-	Description  *string   `json:"description"`
-	Price        float64   `json:"price"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
-	AuthorUserID int       `json:"author_user_id"`
+	ID           int       `json:"id"              example:"10"`
+	Version      int       `json:"version"         example:"1"`
+	Title        string    `json:"title"           example:"MacBook Pro 14"`
+	Description  *string   `json:"description"     example:"Ноутбук в отличном состоянии"`
+	Price        float64   `json:"price"           example:"149990.50"`
+	CreatedAt    time.Time `json:"created_at"      example:"2026-03-30T12:00:00Z"`
+	UpdatedAt    time.Time `json:"updated_at"      example:"2026-03-30T12:00:00Z"`
+	AuthorUserID int       `json:"author_user_id"  example:"1"`
 }
 
 func productDTOFromDomain(product domain.Product) ProductDTOResponse {

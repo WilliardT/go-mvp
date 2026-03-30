@@ -11,7 +11,17 @@ import (
 
 type GetUserResponse UserDTOResponse
 
-
+// GetUser      godoc
+// @Summary     Получить пользователя
+// @Description Получить существующего пользователя по его ID
+// @Tags        users
+// @Produce     json
+// @Param       id path int true "ID пользователя"
+// @Success     200 {object} GetUserResponse "Пользователь успешно найден"
+// @Failure     400 {object} core_http_response.ErrorResponse "Некорректный запрос"
+// @Failure     404 {object} core_http_response.ErrorResponse "Пользователь не найден"
+// @Failure     500 {object} core_http_response.ErrorResponse "Внутренняя ошибка сервера"
+// @Router      /users/{id} [get]
 func (h *UsersHTTPHandler) GetUser(
 	rw http.ResponseWriter,
 	r *http.Request,

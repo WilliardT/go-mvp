@@ -11,6 +11,18 @@ import (
 
 type GetProductsResponse []ProductDTOResponse
 
+// GetProducts  godoc
+// @Summary     Список продуктов
+// @Description Получить список продуктов с опциональной фильтрацией по автору карточки продукта и пагинацией
+// @Tags        products
+// @Produce     json
+// @Param       author_user_id query int false "ID автора карточки продукта"
+// @Param       limit query int false "Количество продуктов (items) для получения"
+// @Param       offset query int false "Количество продуктов для (items) пропуска от начала списка"
+// @Success     200 {array} GetProductsResponse "Продукты успешно получены"
+// @Failure     400 {object} core_http_response.ErrorResponse "Некорректный запрос"
+// @Failure     500 {object} core_http_response.ErrorResponse "Внутренняя ошибка сервера"
+// @Router      /products [get]
 func (h *ProductsHTTPHandler) GetProducts(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

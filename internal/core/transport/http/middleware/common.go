@@ -11,7 +11,35 @@ import (
 	core_http_response "github.com/WilliardT/go-mvp/internal/core/transport/http/response"
 )
 
+
 const requestIDHeader = "X-Request-ID"
+
+func CORS() Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			allowedOrigins := map[string]struct{}{
+				"http://localhost:5050": {},
+			}
+
+			origin := r.Header.Get("Origin")
+			
+			if _, ok := allowedOrigins[origin]; ok {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+				w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PATCH, PUT, DELETE")
+				w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+			}
+
+			if r.Method == http.MethodOptions {
+				w.WriteHeader(http.StatusOK)
+
+				return
+			}
+
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
 
 func ReqestID() Middleware {
 	return func(next http.Handler) http.Handler {

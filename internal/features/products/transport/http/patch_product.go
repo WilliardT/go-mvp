@@ -12,10 +12,10 @@ import (
 )
 
 type PatchProductRequest struct {
-	Title        core_http_types.Nullable[string]  `json:"title"`
-	Description  core_http_types.Nullable[string]  `json:"description"`
-	Price        core_http_types.Nullable[float64] `json:"price"`
-	AuthorUserID core_http_types.Nullable[int]     `json:"author_user_id"`
+	Title        core_http_types.Nullable[string]  `json:"title"            swaggertype:"string"  example:"MacBook Pro 14"`
+	Description  core_http_types.Nullable[string]  `json:"description"      swaggertype:"string"  example:"Ноутбук в отличном состоянии"`
+	Price        core_http_types.Nullable[float64] `json:"price"            swaggertype:"number"  example:"149990.50"`
+	AuthorUserID core_http_types.Nullable[int]     `json:"author_user_id"   swaggertype:"integer" example:"1"`
 }
 
 func (r *PatchProductRequest) Validate() error {
@@ -64,6 +64,24 @@ func (r *PatchProductRequest) Validate() error {
 
 type PatchProductResponse ProductDTOResponse
 
+// PatchProduct godoc
+// @Summary     Изменение продукта
+// @Description Частично обновить информацию существующего продукта по его ID
+// @Description ### Логика обновления полей:
+// @Description 1. **Поле не передано**: значение в БД не меняется
+// @Description 2. **Явно передано значение**: устанавливается новое значение поля
+// @Description 3. **Передан null**: допустимо только для `description`, поле будет очищено
+// @Tags        products
+// @Accept      json
+// @Produce     json
+// @Param       id path int true "ID изменяемого продукта"
+// @Param       request body PatchProductRequest true "Данные (body) для обновления продукта"
+// @Success     200 {object} PatchProductResponse "Продукт успешно обновлён"
+// @Failure     400 {object} core_http_response.ErrorResponse "Некорректный запрос"
+// @Failure     404 {object} core_http_response.ErrorResponse "Продукт не найден"
+// @Failure     409 {object} core_http_response.ErrorResponse "Конфликт данных при обновлении продукта"
+// @Failure     500 {object} core_http_response.ErrorResponse "Внутренняя ошибка сервера"
+// @Router      /products/{id} [patch]
 func (h *ProductsHTTPHandler) PatchProduct(
 	rw http.ResponseWriter,
 	r *http.Request,
