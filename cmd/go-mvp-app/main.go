@@ -91,6 +91,7 @@ func main() {
 	httpServer := core_http_server.NewHTTPServer(
 		core_http_server.NewConfigMust(),
 		logger,
+		core_http_middleware.CORS(),
 		core_http_middleware.ReqestID(),
 		core_http_middleware.Logger(logger),
 		core_http_middleware.Trace(),
