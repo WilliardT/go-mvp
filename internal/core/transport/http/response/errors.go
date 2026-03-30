@@ -2,6 +2,6 @@
 
 
  type ErrorResponse struct {
- 	Error   string `json:"error"`
- 	Message string `json:"message,omitempty"`
+ 	Error   string `json:"error"              example:"full error text"`
+ 	Message string `json:"message,omitempty"  example:"Описание ошибки"`
  }

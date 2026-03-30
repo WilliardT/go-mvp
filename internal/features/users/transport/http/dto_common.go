@@ -4,10 +4,10 @@ import "github.com/WilliardT/go-mvp/internal/core/domain"
 
 
 type UserDTOResponse struct {
-	ID          int     `json:"id"`
-	Version     int     `json:"version"`
-	FullName    string  `json:"full_name"`
-	PhoneNumber *string `json:"phone_number"`
+	ID          int     `json:"id".            example:"10"`
+	Version     int     `json:"version"        example:"10"`
+	FullName    string  `json:"full_name"      example:"Василий Петрович"`
+	PhoneNumber *string `json:"phone_number"   example:"+79998887766"`
 }
 
 
