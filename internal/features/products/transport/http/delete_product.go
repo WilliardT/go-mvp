@@ -8,6 +8,16 @@ import (
 	core_http_response "github.com/WilliardT/go-mvp/internal/core/transport/http/response"
 )
 
+// DeleteProduct godoc
+// @Summary      Удалить продукт (item)
+// @Description  Удалить существующий продукт (item) по его ID
+// @Tags         products
+// @Param        id path int true "ID продукта"
+// @Success      204 "Продукт успешно удалён"
+// @Failure      400 {object} core_http_response.ErrorResponse "Некорректный запрос"
+// @Failure      404 {object} core_http_response.ErrorResponse "Продукт (item) не найден"
+// @Failure      500 {object} core_http_response.ErrorResponse "Внутренняя ошибка сервера"
+// @Router       /products/{id} [delete]
 func (h *ProductsHTTPHandler) DeleteProduct(
 	rw http.ResponseWriter,
 	r *http.Request,

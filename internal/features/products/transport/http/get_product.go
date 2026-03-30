@@ -10,6 +10,17 @@ import (
 
 type GetProductResponse ProductDTOResponse
 
+// GetProduct   godoc
+// @Summary     Получить продукт
+// @Description Получить существующий продукт по его ID
+// @Tags        products
+// @Produce     json
+// @Param       id path int true "ID продукта"
+// @Success     200 {object} GetProductResponse "Продукт успешно найден"
+// @Failure     400 {object} core_http_response.ErrorResponse "Некорректный запрос"
+// @Failure     404 {object} core_http_response.ErrorResponse "Продукт не найден"
+// @Failure     500 {object} core_http_response.ErrorResponse "Внутренняя ошибка сервера"
+// @Router      /products/{id} [get]
 func (h *ProductsHTTPHandler) GetProduct(
 	rw http.ResponseWriter,
 	r *http.Request,

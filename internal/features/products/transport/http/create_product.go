@@ -10,14 +10,26 @@ import (
 )
 
 type CreateProductRequest struct {
-	Title        string  `json:"title" validate:"required,min=1,max=100"`
-	Description  *string `json:"description" validate:"omitempty,min=1,max=100"`
-	Price        float64 `json:"price" validate:"required,gt=0"`
-	AuthorUserID int     `json:"author_user_id" validate:"required,gt=0"`
+	Title        string  `json:"title"            validate:"required,min=1,max=100"   example:"MacBook Pro 14"`
+	Description  *string `json:"description"      validate:"omitempty,min=1,max=100"  example:"Ноутбук в отличном состоянии"`
+	Price        float64 `json:"price"            validate:"required,gt=0"            example:"149990.50"`
+	AuthorUserID int     `json:"author_user_id"   validate:"required,gt=0"            example:"1"`
 }
 
 type CreateProductResponse ProductDTOResponse
 
+// CreateProduct   godoc
+// @Summary        Создать продукт
+// @Description    Создать новый продукт (item) с указанными данными
+// @Tags           products
+// @Accept         json
+// @Produce        json
+// @Param          request body CreateProductRequest true "Данные для создания продукта"
+// @Success        201 {object} CreateProductResponse "Продукт успешно создан"
+// @Failure        400 {object} core_http_response.ErrorResponse "Некорректный запрос"
+// @Failure        404 {object} core_http_response.ErrorResponse "Пользователь (автор карточки продукта) не найден"
+// @Failure        500 {object} core_http_response.ErrorResponse "Внутренняя ошибка сервера"
+// @Router         /products [post]
 func (h *ProductsHTTPHandler) CreateProduct(
 	rw http.ResponseWriter,
 	r *http.Request,
